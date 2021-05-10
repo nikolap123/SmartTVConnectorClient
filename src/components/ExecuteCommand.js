@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from "react";
-import {getDevicesWithApplications} from "../utility/api-endpoints"
+import {getDevicesWithApplications,runCommand} from "../utility/api-endpoints"
 
 function ExecuteCommand() {
 
@@ -10,6 +10,8 @@ function ExecuteCommand() {
 
  const [selectedDevice,setSelectedDevice] = useState(null)
  const [selectedApplication,setSelectedApplication] = useState(null)
+
+ const [commandResponse,setCommandResponse] = useState("")
 
 
  const handleDeviceChange = (deviceId) => {
@@ -27,7 +29,15 @@ function ExecuteCommand() {
  }
 
  const handleRunApplication = () => {
-     console.log(selectedDevice,selectedApplication)
+
+    let body = {
+        DeviceId : parseInt(selectedDevice),
+        ApplicationId : parseInt(selectedApplication)
+    }
+
+    setCommandResponse("")
+    
+    runCommand(JSON.stringify(body)).then(res => setCommandResponse(res.data)).catch(err => console.log(err));
  }
 
  useEffect(()=>{
@@ -44,22 +54,29 @@ function ExecuteCommand() {
  },[])
 
   return (
-    <div>
-        <select onChange={(e) => handleDeviceChange(e.target.value)}>
-            <option key={0} value={0}>Select device</option>
+      <div className="command-container">
+        <div className="command-options">
+                <select onChange={(e) => handleDeviceChange(e.target.value)}>
+                    <option key={0} value={0}>Select device</option>
 
-            { devices && devices.map((el,i)=> <option key={i} value={el.Id}>{el.Name}</option>) }
+                    { devices && devices.map((el,i)=> <option key={i} value={el.Id}>{el.Name}</option>) }
 
-        </select>
+                </select>
 
-        <select onChange={(e) => handleApplicationChange(e.target.value)}>
-            <option key={0} value={0}>Select device</option>
+                <select onChange={(e) => handleApplicationChange(e.target.value)}>
+                    <option key={0} value={0}>Select device</option>
 
-            { applications && applications.map((el,i)=> <option key={i} value={el.Id} >{el.Name}</option>) }
-        </select>
+                    { applications && applications.map((el,i)=> <option key={i} value={el.Id} >{el.Name}</option>) }
+                </select>
 
-        <button onClick={handleRunApplication}>Run application</button>
-    </div>
+                <button onClick={handleRunApplication}>Run application</button>
+            </div>
+            <div className="command-result">
+                {commandResponse.Message}
+            </div>
+      </div>
+    
+    
   );
 }
 

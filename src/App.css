@@ -2,3 +2,26 @@
   text-align: center;
   margin-top: 15%;
 }
+
+.command-options {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  margin: 5%;
+}
+
+.command-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.command-result {
+  display: flex;
+  width: 50%;
+  margin: 5%;
+}
+
+select {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}

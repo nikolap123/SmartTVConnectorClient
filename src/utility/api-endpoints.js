@@ -4,7 +4,11 @@ const API_URL = "http://localhost:8081"
 
 export const getDevicesWithApplications = () => axios.get(`${API_URL}/get-devices`)
 
-export const runCommand = (body) => axios.post(`${API_URL}/run-command`,body)
+export const runCommand = (body) => axios.post(`${API_URL}/run-command`,body,{
+    headers: {
+        'Content-Type': 'application/json',
+    }
+})
 
 export const uploadDist = (body) => axios.post(`${API_URL}/upload-dist`,body)
 
