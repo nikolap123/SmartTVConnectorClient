@@ -15,19 +15,42 @@
   flex-direction: row;
 }
 
-.command-result {
+.command-sequence-result {
   display: flex;
+  flex-direction: column;
   width: 50%;
   margin: 5%;
 }
 
+.n-command-sequence-result {
+  display: flex;
+  flex-direction: column;
+  margin: 5%;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
 select {
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin-top: 15px;
+  margin-bottom: 15px;
 }
 
 .dist-upload {
   margin-top: 10px;
   display: flex;
   flex-direction: column;
+}
+
+.execute-command {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.command-exp {
+  margin-top: 10px;
+}
+
+.command-result {
+  margin-top: 10px;
 }

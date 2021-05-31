@@ -39,12 +39,16 @@ function ExecuteCommand() {
 
     setCommandResponse("")
     
-    runCommand(JSON.stringify(body)).then(res => setCommandResponse(res.data)).catch(err => console.log(err));
+    runCommand(JSON.stringify(body)).then(res =>{
+        setCommandResponse(res.data)
+        console.log("RESPONSE",res.data)
+    }).catch(err => console.log(err));
  }
 
  const handleUploadDist = () => {
      let body = new FormData()
 
+     console.log(selectedDist);
      body.append('dist',selectedDist);
      body.append('ApplicationId',selectedApplication);
      body.append('DeviceType',2);
@@ -52,6 +56,22 @@ function ExecuteCommand() {
      setCommandResponse("")
 
      uploadDist(body).then(res => setCommandResponse(res.data)).catch(err => console.log(err))
+ }
+
+ const printResponse = () => {
+
+    return (
+
+        commandResponse.Data && commandResponse.Data.map((el,ind) => {
+            return (
+                <div className="n-command-sequence-result" key={ind}>
+                    <div className="command-exp">Command Exp : <br/>{el.CommandExp}</div>
+                    <div className="command-result">Command Result: <br/>{el.CommandResult}</div>
+                </div>
+               
+            )
+        })
+    )
  }
 
  useEffect(()=>{
@@ -75,44 +95,54 @@ function ExecuteCommand() {
                     <input type="radio" name="usage-type" value="COMMAND" onChange={(e) => handleUsageTypeChange(e.target.value)} defaultChecked={true}/> Run Command
                     <input type="radio" name="usage-type" value="UPLOAD" onChange={(e) => handleUsageTypeChange(e.target.value)}/> Upload Dist
                 </div>
-                <select onChange={(e) => handleDeviceChange(e.target.value)} disabled={selectedUsageType !== "COMMAND"}>
+
+                {selectedUsageType === "COMMAND" && (
+                    <div className="execute-command">
+                    <select onChange={(e) => handleDeviceChange(e.target.value)} disabled={selectedUsageType !== "COMMAND"}>
                     <option key={0} value={0}>Select device</option>
 
                     { devices && devices.map((el,i)=> <option key={i} value={el.Id}>{el.Name}</option>) }
 
-                </select>
+                    </select>
 
-                <select onChange={(e) => handleApplicationChange(e.target.value)} disabled={selectedUsageType !== "COMMAND"}>
-                    <option key={0} value={0}>Select device</option>
+                    <select onChange={(e) => handleApplicationChange(e.target.value)} disabled={selectedUsageType !== "COMMAND"}>
+                        <option key={0} value={0}>Select device</option>
 
-                    { applications && applications.map((el,i)=> <option key={i} value={el.Id} >{el.Name}</option>) }
-                </select>
+                        { applications && applications.map((el,i)=> <option key={i} value={el.Id} >{el.Name}</option>) }
+                    </select>
 
-                <select onChange={(e) => handleCommandChange(e.target.value)} disabled={selectedUsageType !== "COMMAND"}>
-                    <option key={0} value={0}>Select device</option>
+                    <select onChange={(e) => handleCommandChange(e.target.value)} disabled={selectedUsageType !== "COMMAND"}>
+                        <option key={0} value={0}>Select device</option>
 
-                    <option key={0} value={"execute"}>Run application with build</option>
-                    <option key={1} value={"execute-without-build"}>Run application without build</option>
-                </select>
+                        <option key={0} value={"execute"}>Run application with build</option>
+                        <option key={1} value={"execute-without-build"}>Run application without build</option>
+                    </select>
 
 
-                <button onClick={handleRunApplication} disabled={selectedUsageType !== "COMMAND"} >Run application</button>
-
-                <div className="dist-upload">
-                    <input type="file" name="file" onChange={(e) => handleDistChange(e.target.files[0])} disabled={selectedUsageType !== "UPLOAD"}/>
-
-                    <select onChange={(e) => handleApplicationChange(e.target.value)} disabled={selectedUsageType !== "UPLOAD"}>
-                        <option key={0} value={0}>Select application</option>
-
-                            { applications && applications.map((el,i)=> <option key={i} value={el.Id} >{el.Name}</option>) }
-                        </select>
-
-                    <button onClick={handleUploadDist} disabled={selectedUsageType !== "UPLOAD"}>Upload dist</button>
+                    <button onClick={handleRunApplication} disabled={selectedUsageType !== "COMMAND"} >Run application</button>
                 </div>
+                )}
+                
+
+                {selectedUsageType === "UPLOAD" && (
+                     <div className="dist-upload">
+                     <input type="file" name="file" onChange={(e) => handleDistChange(e.target.files[0])} disabled={selectedUsageType !== "UPLOAD"}/>
+ 
+                     <select onChange={(e) => handleApplicationChange(e.target.value)} disabled={selectedUsageType !== "UPLOAD"}>
+                         <option key={0} value={0}>Select application</option>
+ 
+                             { applications && applications.map((el,i)=> <option key={i} value={el.Id} >{el.Name}</option>) }
+                         </select>
+ 
+                     <button onClick={handleUploadDist} disabled={selectedUsageType !== "UPLOAD"}>Upload dist</button>
+                 </div>
+                )}
+               
                 
             </div>
-            <div className="command-result">
-                {commandResponse.Message}
+            <div className="command-sequence-result">
+            <div className="n-command-sequence-result">{commandResponse && commandResponse.Message}</div>
+                {printResponse()}
             </div>
       </div>
     
