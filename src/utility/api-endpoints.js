@@ -1,6 +1,6 @@
 import axios from "axios"
 
-const API_URL = "http://localhost:8081"
+const API_URL = "http://192.168.50.5:8081"
 
 export const getDevicesWithApplications = () => axios.get(`${API_URL}/get-devices`)
 
